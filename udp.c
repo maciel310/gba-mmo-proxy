@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include "string.h"
@@ -12,6 +13,7 @@
 
 int sockfd;
 struct sockaddr_in serveraddr;
+int serverlen;
 
 void udp_init() {
   sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -20,22 +22,23 @@ void udp_init() {
   serveraddr.sin_family = AF_INET;
   memcpy((char *)&serveraddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
   serveraddr.sin_port = htons(PORT);
+  serverlen = sizeof(serveraddr);
+
+  struct timeval tv;
+  tv.tv_sec = 0;
+  tv.tv_usec = 50 * 1000;
+  setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 }
 
-uint32_t udp_send_location(uint16_t x, uint16_t y) {
+void udp_send_location(uint16_t x, uint16_t y) {
 	char payload[30];
 	sprintf(payload, "%d,%d", x, y);
 
-  int serverlen = sizeof(serveraddr);
   sendto(sockfd, payload, strlen(payload), 0, (struct sockaddr *)&serveraddr, serverlen);
+}
 
-  int n = recvfrom(sockfd, payload, 30, MSG_WAITALL, (struct sockaddr *)&serveraddr, &serverlen);
-  payload[n] = '\0';
-
-  char *end;
-  const long rx = strtol(payload, &end, 10);
-  end++;
-  const long ry = strtol(end, &end, 10);
-
-  return (rx << 16) | ry;
+int read_server_update(char *buffer, size_t len) {
+  int n = recvfrom(sockfd, buffer, len, 0, (struct sockaddr *)&serveraddr, &serverlen);
+  buffer[n] = '\0';
+  return n;
 }
