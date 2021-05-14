@@ -30,11 +30,11 @@ void udp_init() {
   setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 }
 
-void udp_send_location(uint16_t x, uint16_t y) {
-	char payload[30];
-	sprintf(payload, "%d,%d", x, y);
-
-  sendto(sockfd, payload, strlen(payload), 0, (struct sockaddr *)&serveraddr, serverlen);
+void udp_send_location(uint32_t *buffer, uint32_t len) {
+  for (int i = 0; i < len; i++) {
+    buffer[i] = htonl(buffer[i]);
+  }
+  sendto(sockfd, buffer, len, 0, (struct sockaddr *)&serveraddr, serverlen);
 }
 
 int read_server_update(char *buffer, size_t len) {

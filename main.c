@@ -7,11 +7,36 @@
 #include "multiboot.h"
 #include "udp.h"
 
+uint32_t incoming_buffer[30];
+uint32_t incoming_buffer_position = 0;
+uint32_t expected_length = 0;
+void transfer(uint32_t out) {
+  uint32_t data = Spi32(out);
+
+  if (expected_length == 0) {
+    expected_length = data;
+    incoming_buffer_position = 0;
+    return;
+  }
+  incoming_buffer[incoming_buffer_position++] = data;
+
+  if (incoming_buffer_position >= expected_length) {
+    for (int i = 0; i <= expected_length; i++) {
+      printf("%08x", (unsigned long) incoming_buffer[i]);
+    }
+    printf("\n");
+    udp_send_location(incoming_buffer, expected_length * 4);
+
+    expected_length = 0;
+    incoming_buffer_position = 0;
+  }
+}
+
 int main(int argc, char* argv[]) {
   multiboot("gba_mb.gba");
 
   udp_init();
-  udp_send_location(12, 12);
+  udp_send_location(incoming_buffer, 1);
 
   uint16_t x = 0;
   uint16_t y = 0;
@@ -24,7 +49,7 @@ int main(int argc, char* argv[]) {
     if (rec_size > 0) {
       uint32_t d;
 
-      Spi32(rec_size);
+      transfer(rec_size);
       usleep(1000);
 
       for (int i = 0; i < rec_size; i++) {
@@ -33,12 +58,10 @@ int main(int argc, char* argv[]) {
           (buffer[i++] << 16) |
           (buffer[i++] << 8) |
           (buffer[i]);
-        printf("%08x", d);
-        Spi32(d);
+        transfer(d);
         usleep(1000);
       }
 
-      printf("\n");
     }
   }
 
