@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     if (rec_size > 0) {
       uint32_t d;
 
-      transfer(rec_size);
+      transfer((rec_size + 4) | 0xBEEF0000);
       usleep(1000);
 
       for (int i = 0; i < rec_size; i++) {
@@ -59,6 +59,8 @@ int main(int argc, char* argv[]) {
         transfer(d);
         usleep(1000);
       }
+      transfer(0xDEADBEEF);
+      usleep(1000);
     } else {
       keepalive_counter++;
       if (keepalive_counter > 100) {
