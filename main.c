@@ -3,7 +3,9 @@
 #include <wiringPiSPI.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 
+#include "account.h"
 #include "multiboot.h"
 #include "udp.h"
 
@@ -33,10 +35,36 @@ void transfer(uint32_t out) {
 }
 
 int main(int argc, char* argv[]) {
-  multiboot("gba_mb.gba");
-
   udp_init();
-  udp_send_location(incoming_buffer, 1);
+  if (!login()) {
+    printf("Welcome to GBA-MMO! To create an account, first enter your email:\n");
+    char *email = NULL;
+    size_t email_len = 0;
+    getline(&email, &email_len, stdin);
+
+    printf("\nEnter your character name:\n");
+    char *name = NULL;
+    size_t name_len = 0;
+    getline(&name, &name_len, stdin);
+
+    // Remove trailing new line
+    name[strlen(name)-1] = '\0';
+    email[strlen(email)-1] = '\0';
+
+    printf("\n\nCreating account...\n");
+    if (!create_account(name, email)) {
+      printf("Failed to create account!\n\n");
+      return 0;
+    }
+
+    if (!login()) {
+      printf("Failed to log in after creating account!\n\n");
+      return 0;
+    }
+  }
+
+
+  multiboot("gba_mb.gba");
 
   uint32_t keepalive_counter = 0;
 

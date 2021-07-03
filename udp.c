@@ -30,6 +30,10 @@ void udp_init() {
   setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 }
 
+void udp_send_string(char *buffer) {
+  sendto(sockfd, buffer, strlen(buffer), 0, (struct sockaddr *)&serveraddr, serverlen);
+}
+
 void udp_send_location(uint32_t *buffer, uint32_t len) {
   for (int i = 0; i < len; i++) {
     buffer[i] = htonl(buffer[i]);
