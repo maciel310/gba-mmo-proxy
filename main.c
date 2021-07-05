@@ -23,10 +23,6 @@ void transfer(uint32_t out) {
   incoming_buffer[incoming_buffer_position++] = data;
 
   if (incoming_buffer_position >= expected_length) {
-    for (int i = 0; i <= expected_length; i++) {
-      printf("%08x", (unsigned long) incoming_buffer[i]);
-    }
-    printf("\n");
     udp_send_location(incoming_buffer, expected_length * 4);
 
     expected_length = 0;
@@ -61,6 +57,8 @@ int main(int argc, char* argv[]) {
       printf("Failed to log in after creating account!\n\n");
       return 0;
     }
+
+    printf("\nThanks for joining! Please join our discord: https://discord.gg/B3wJYnUswN\n\n");
   }
 
 

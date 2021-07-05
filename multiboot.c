@@ -37,7 +37,7 @@ void multiboot(const char *filename)
 
 	if(fd == -1)
 	{
-		fprintf(stderr, "Open Error\n");
+		fprintf(stderr, "Error opening game ROM: fopen\n");
 		exit(1);
 	}
 
@@ -45,7 +45,7 @@ void multiboot(const char *filename)
 
 	if(fstat(fd, &stbuf) == -1)
 	{
-		fprintf(stderr, "Fstat Error\n");
+		fprintf(stderr, "Error opening game ROM: fstat\n");
 		exit(1);
 	}
 
@@ -66,7 +66,7 @@ void multiboot(const char *filename)
 
 	if(fp == NULL)
 	{
-		fprintf(stderr, "Fopen Error\n");
+		fprintf(stderr, "Error opening game ROM: Fopen Error\n");
 		exit(1);
 	}
 
@@ -74,7 +74,7 @@ void multiboot(const char *filename)
 
 	if(fdata == NULL)
 	{
-		fprintf(stderr, "Calloc Error\n");
+		fprintf(stderr, "Error opening game ROM: Calloc Error\n");
 		exit(1);
 	}
 
@@ -83,7 +83,7 @@ void multiboot(const char *filename)
 
 
 	// -----------------------------------------------------
-	printf("Waiting for GBA...\n");
+	printf("Waiting for GBA. Please make sure the link cable is connected and turn on your GBA.\n");
 
 	uint32_t recv;
 
@@ -94,10 +94,9 @@ void multiboot(const char *filename)
 
 	} while(recv != 0x7202);
 
+  printf("Connected, loading game...");
 
 	// -----------------------------------------------------
-	printf("Sending header.\n");
-
 	Spi32(0x6102);
 
 	uint16_t* fdata16 = (uint16_t*)fdata;
@@ -111,8 +110,6 @@ void multiboot(const char *filename)
 
 
 	// -----------------------------------------------------
-	printf("Getting encryption and crc seeds.\n");
-
 	Spi32(0x6202);
 	Spi32(0x63D1);
 
@@ -140,12 +137,7 @@ void multiboot(const char *filename)
 	crcB  = (token >> 16) & 0xFF;
 	crcC  = 0xC387;
 
-	printf("Seeds: %02x, %02x, %08x\n", crcA, crcB, seed);
-
-
 	// -----------------------------------------------------
-	printf("Sending...\n");
-
 	uint32_t* fdata32 = (uint32_t*)fdata;
 
 	for(uint32_t i=0xC0; i<fsize; i+=4)
@@ -190,8 +182,6 @@ void multiboot(const char *filename)
 
 
 	// -----------------------------------------------------
-	printf("Waiting for checksum...\n");
-
 	Spi32(0x0065);
 
 	do
@@ -204,10 +194,9 @@ void multiboot(const char *filename)
 	Spi32(0x0066);
 	uint32_t crcGBA = Spi32(crcC & 0xFFFF) >> 16;
 
-	printf("Gba: %x, Cal: %x\n", crcGBA, crcC);
-	printf("Done.\n");
+	printf("\n\nLoading complete! To stop playing turn off the GameBoy and press Ctrl+C here.\n");
 
-  usleep(6000000);
+  usleep(5000000);
 
   free(fdata);
 }
