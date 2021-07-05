@@ -8,7 +8,7 @@
 
 #include "udp.h"
 
-#define ADDRESS "192.168.1.58"
+#define ADDRESS "mmo.anthonymaciel.com"
 #define PORT 5465
 
 int sockfd;
