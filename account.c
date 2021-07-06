@@ -4,7 +4,11 @@
 #include "account.h"
 #include "udp.h"
 
-#define COOKIE_FILE "gba-mmo-cookie"
+#ifdef LOCAL
+  #define COOKIE_FILE "gba-mmo-cookie-local"
+#else
+  #define COOKIE_FILE "gba-mmo-cookie"
+#endif
 
 char* read_cookie_file() {
   char* buffer = NULL;
