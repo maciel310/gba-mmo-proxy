@@ -94,8 +94,6 @@ void multiboot(const char *filename)
 
 	} while(recv != 0x7202);
 
-  printf("Connected, loading game...");
-
 	// -----------------------------------------------------
 	Spi32(0x6102);
 
