@@ -64,8 +64,6 @@ int main(int argc, char* argv[]) {
 
   multiboot("gba_mb.gba");
 
-  uint32_t keepalive_counter = 0;
-
   uint32_t buffer_len = 512;
   char buffer[512];
   while (1) {
@@ -87,13 +85,6 @@ int main(int argc, char* argv[]) {
       }
       transfer(0xDEADBEEF);
       usleep(1000);
-    } else {
-      keepalive_counter++;
-      if (keepalive_counter > 100) {
-        printf("Sending keepalive\n");
-        udp_send_location(incoming_buffer, 1);
-        keepalive_counter = 0;
-      }
     }
   }
 
