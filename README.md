@@ -55,3 +55,8 @@ cable created above, turn on your GBA, and assuming everything is connected corr
 
 If you run in to any issues getting set up join the [Discord](https://discord.gg/B3wJYnUswN). As common issues are identified
 I'll expand this section with some tips.
+
+
+## Credits
+
+multiboot.c is heavily derrived from the implementation at https://github.com/akkera102/gba_03_multiboot, which is licensed CC0.
