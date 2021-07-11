@@ -58,9 +58,10 @@ int main(int argc, char* argv[]) {
       return 0;
     }
 
-    printf("\nThanks for joining! Please join our discord: https://discord.gg/B3wJYnUswN\n\n");
+    printf("\nThanks for joining!\n\n");
   }
 
+  printf("\nIf you haven't already, join the discord at: https://discord.gg/B3wJYnUswN\n\n");
 
   multiboot("gba_mb.gba");
 
