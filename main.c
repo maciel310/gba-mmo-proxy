@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
   printf("\nIf you haven't already, join the discord at: https://discord.gg/B3wJYnUswN\n\n");
 
-  multiboot("gba_mb.gba");
+  multiboot("gba_mmo.gba");
 
   uint32_t buffer_len = 512;
   char buffer[512];
