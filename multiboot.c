@@ -1,3 +1,8 @@
+/*
+ * Code in this file is heavily derrived from https://github.com/akkera102/gba_03_multiboot , which is
+ * licensed CC0. This file is excluded from the repository's license and is also licensed CC0.
+*/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
