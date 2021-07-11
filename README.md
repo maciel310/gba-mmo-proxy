@@ -60,3 +60,8 @@ I'll expand this section with some tips.
 ## Credits
 
 multiboot.c is heavily derrived from the implementation at https://github.com/akkera102/gba_03_multiboot, which is licensed CC0.
+
+# LICENSE
+
+Other than multiboot.c, this project is licensed under the terms of GPLv3. If you would like to use any part of this project
+in a way that is incompatible with the GPLv3 license please reach out and I may be willing to grant an alternative license.
