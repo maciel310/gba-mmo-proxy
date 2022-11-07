@@ -56,6 +56,14 @@ cable created above, turn on your GBA, and assuming everything is connected corr
 If you run in to any issues getting set up join the [Discord](https://discord.gg/B3wJYnUswN). As common issues are identified
 I'll expand this section with some tips.
 
+## Compiling
+
+To build the host from source use the following gcc command:
+
+```
+gcc main.c multiboot.c udp.c account.c -lwiringPi -o host
+```
+
 
 ## Credits
 
